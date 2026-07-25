@@ -135,7 +135,7 @@ export default function Schemes() {
             Major Government Schemes
           </h1>
           <p className="text-sm md:text-base text-slate-500 font-medium max-w-2xl mx-auto">
-            Smart, citizen-focused schemes implemented across Baghpat Nagar Palika Parishad.
+            Smart, citizen-focused schemes implemented across Town Panchayat , Aminagar Sarai , Baghpat.
           </p>
           <div className="w-20 h-1 bg-gov-saffron mx-auto mt-4 rounded-full"></div>
         </div>
@@ -203,7 +203,7 @@ export default function Schemes() {
             </p>
           </div>
           <Link
-            href="/contact-us"
+            href="/contact"
             className="px-5 py-2.5 bg-gov-blue-medium hover:bg-gov-blue-dark text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-colors shrink-0 cursor-pointer shadow-xs text-center"
           >
             Locate Helpdesk

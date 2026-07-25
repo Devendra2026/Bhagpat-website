@@ -1,104 +1,98 @@
+
+
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import {
-  MapPin,
-  Phone,
-  TriangleAlert,
-} from "lucide-react";
 
 import type { Grievance } from "@/types/public-grievance";
 
 export const grievanceColumns: ColumnDef<Grievance>[] = [
   {
-    id: "serialNumber",
-    header: "S.No.",
+    accessorKey: "id",
+    header: "ID",
+
     cell: ({ row }) => (
       <span className="font-semibold text-slate-700">
-        {row.index + 1}
+        {row.original.id}
       </span>
     ),
   },
 
   {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => (
-      <span className="whitespace-nowrap rounded-lg bg-blue-50 px-3 py-1.5 text-xs font-bold text-blue-700">
-        {row.original.email}
-      </span>
-    ),
-  },
-
-  {
-    accessorKey: "name",
+    accessorKey: "full_name",
     header: "Citizen Name",
+
     cell: ({ row }) => (
       <div>
         <p className="font-semibold text-slate-900">
-          {row.original.name}
+          {row.original.full_name}
         </p>
 
-        <a
-          href={`tel:${row.original.phone}`}
-          className="mt-1 inline-flex items-center gap-1 text-xs text-slate-500"
-        >
-          <Phone className="h-3.5 w-3.5" />
-
-          {row.original.phone}
-        </a>
+        <p className="text-xs text-slate-500">
+          {row.original.email}
+        </p>
       </div>
     ),
   },
 
   {
-    accessorKey: "complaint_category",
-    header: "Complaint Category",
+    accessorKey: "mobile_number",
+    header: "Mobile Number",
+
     cell: ({ row }) => (
-      <span className="whitespace-nowrap rounded-full bg-purple-50 px-3 py-1 text-xs font-semibold text-purple-700">
+      <span className="whitespace-nowrap text-sm text-slate-700">
+        {row.original.mobile_number}
+      </span>
+    ),
+  },
+
+  {
+    accessorKey: "complaint_category",
+    header: "Category",
+
+    cell: ({ row }) => (
+      <span className="inline-flex rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold text-orange-700">
         {row.original.complaint_category}
       </span>
     ),
   },
 
   {
-    accessorKey: "ward",
+    accessorKey: "municipal_ward",
     header: "Ward",
+
     cell: ({ row }) => (
-      <span className="whitespace-nowrap font-medium text-slate-700">
-        {row.original.ward}
+      <span className="inline-flex rounded-lg bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+        {row.original.municipal_ward}
       </span>
     ),
   },
 
   {
-    accessorKey: "incident address",
+    accessorKey: "incident_address",
     header: "Incident Address",
-    cell: ({ row }) => (
-      <div className="flex max-w-[230px] items-start gap-2">
-        <MapPin className="mt-1 h-4 w-4 shrink-0 text-slate-400" />
 
-        <p className="line-clamp-2 leading-6">
-          {row.original.incident_address}
-        </p>
-      </div>
+    cell: ({ row }) => (
+      <p
+        title={row.original.incident_address}
+        className="max-w-[220px] truncate text-sm text-slate-600"
+      >
+        {row.original.incident_address}
+      </p>
     ),
   },
 
   {
     accessorKey: "description",
-    header: "Description Details",
-    cell: ({ row }) => (
-      <div className="flex max-w-[320px] items-start gap-2">
-        <TriangleAlert className="mt-1 h-4 w-4 shrink-0 text-amber-500" />
+    header: "Description",
 
-        <p
-          title={row.original.description}
-          className="line-clamp-2 leading-6"
-        >
-          {row.original.description}
-        </p>
-      </div>
+    cell: ({ row }) => (
+      <p
+        title={row.original.description}
+        className="max-w-[280px] truncate text-sm text-slate-600"
+      >
+        {row.original.description}
+      </p>
     ),
   },
 ];

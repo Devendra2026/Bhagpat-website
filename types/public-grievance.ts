@@ -1,57 +1,112 @@
+
 import { z } from "zod";
 
-// data is sent to backend from public grievance form
 
 export const createGrievanceSchema = z.object({
-  name: z
+  full_name: z
     .string()
     .trim()
-    .min(2, " 2 characters"),
-  
+    .min(
+      2,
+      "Name must contain at least 2 characters"
+    )
+    .max(
+      120,
+      "Name cannot exceed 120 characters"
+    ),
+
+  mobile_number: z
+    .string()
+    .trim()
+    .min(
+      7,
+      "Mobile number must contain at least 7 characters"
+    )
+    .max(
+      20,
+      "Mobile number cannot exceed 20 characters"
+    )
+    .regex(
+      /^[6-9]\d{9}$/,
+      "Please enter a valid 10-digit mobile number"
+    ),
+
   email: z
     .string()
     .trim()
-    .email("Valid email address "),
- 
-  phone: z
-    .string()
-    .trim()
-    .regex(
-      /^[6-9]\d{9}$/,
-      "Valid 10-digit mobile number enter"
+    .email(
+      "Please enter a valid email address"
     ),
 
   complaint_category: z
     .string()
     .trim()
-    .min(2, "Required complaint category"
+    .min(
+      2,
+      "Please select a complaint category"
+    )
+    .max(
+      120,
+      "Complaint category cannot exceed 120 characters"
     ),
 
-  ward: z
-    .coerce
-    .number()
-    .int()
-    .min(1, "Must 1 ward number"),
-  
+  municipal_ward: z
+    .string()
+    .trim()
+    .min(
+      2,
+      "Please select a municipal ward"
+    )
+    .max(
+      60,
+      "Municipal ward cannot exceed 60 characters"
+    ),
+
   incident_address: z
     .string()
     .trim()
-    .min(3, " Required incident address"),
+    .min(
+      5,
+      "Incident address must contain at least 5 characters"
+    )
+    .max(
+      255,
+      "Incident address cannot exceed 255 characters"
+    ),
+
   description: z
     .string()
     .trim()
-    .min(10, "complaint description"),
+    .min(
+      10,
+      "Description must contain at least 10 characters"
+    ),
 });
 
-// complete grievance record from backend
-export const grievanceSchema = createGrievanceSchema.extend({
-  id: z.coerce.number().int().positive(),
-});
+/*
+ * Backend se grievance create hone ke baad
+ * id ke saath complete response aayega.
+ */
+export const grievanceSchema =
+  createGrievanceSchema.extend({
+    id: z
+      .number()
+      .int()
+      .positive(),
+  });
 
-// data type of grievance form
-export type CreateGrievanceData = z.infer<typeof grievanceSchema>;
+/*
+ * POST request ka type.
+ * Isme id nahi hogi.
+ */
+export type CreateGrievanceData = z.infer<
+  typeof createGrievanceSchema
+>;
 
-// Admin table ke complete record ka type
+/*
+ * Backend response aur admin table ka type.
+ * Isme id hogi.
+ */
 export type Grievance = z.infer<
   typeof grievanceSchema
 >;

@@ -1,17 +1,24 @@
+
 "use client";
 
 import DataTable from "@/components/admin/DataTable";
-import { contactData } from "@/data/admin/contact-data";
+import type { Contact } from "@/types/contact";
 
-import { contactColumns} from "./Contact-Column";
+import { contactColumns } from "./Contact-Column";
 
-export default function ContactTable() {
+type ContactTableProps = {
+  data: Contact[];
+};
+
+export default function ContactTable({
+  data,
+}: ContactTableProps) {
   return (
     <DataTable
       columns={contactColumns}
-      data={contactData}
-      searchPlaceholder=" Do Search Name, email, phone or subject "
-      emptyMessage="Do not get contact submission"
+      data={data}
+      searchPlaceholder="Search by name, email, phone or subject"
+      emptyMessage="No contact submissions found"
     />
   );
 }

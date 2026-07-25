@@ -1,4 +1,4 @@
-import { contactSchema } from "@/types/contact-";
+import { contactSchema } from "@/types/contact";
 export const contactData = contactSchema.array().parse([
   {
     id: 1,

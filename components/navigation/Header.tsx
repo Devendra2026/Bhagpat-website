@@ -75,13 +75,13 @@ export default function Header() {
             </Button>
 
             {/* Sign Up Button */}
-            <button
-              suppressHydrationWarning
+            <Button
+            suppressHydrationWarning
               className="flex items-center gap-1.5 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition shrink-0 shadow-sm cursor-pointer"
             >
               <UserPlus className="w-4 h-4" />
               <span>Sign Up</span>
-            </button>
+            </Button>
           </div>
         </div>
       </header>

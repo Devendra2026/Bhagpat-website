@@ -27,7 +27,7 @@ export default function DataTable<TData>({
   columns,
   data,
   searchPlaceholder = "Search records...",
-  emptyMessage = "Koi record nahi mila",
+  emptyMessage = "No record found",
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = useState("");
 

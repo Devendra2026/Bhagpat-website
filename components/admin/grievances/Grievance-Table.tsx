@@ -1,17 +1,24 @@
+
 "use client";
 
 import DataTable from "@/components/admin/DataTable";
-import { publicgrievancedata } from '@/data/admin/public-grievance-data';
+import type { Grievance } from "@/types/public-grievance";
 
-import { grievanceColumns } from "./Grievance-Column"
+import { grievanceColumns } from "./Grievance-Column";
 
-export default function GrievanceTable() {
+type GrievanceTableProps = {
+  data: Grievance[];
+};
+
+export default function GrievanceTable({
+  data,
+}: GrievanceTableProps) {
   return (
     <DataTable
       columns={grievanceColumns}
-      data={publicgrievancedata}
-      searchPlaceholder="Do Search Complaint ID, name, category or ward "
-      emptyMessage="Do not get public grievance"
+      data={data}
+      searchPlaceholder="Search by name, email, phone, category or ward"
+      emptyMessage="No grievance submissions found"
     />
   );
 }
