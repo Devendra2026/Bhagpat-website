@@ -91,8 +91,8 @@ export default function Header() {
                   mode="modal"
                   forceRedirectUrl="/auth/role-check"
                   fallbackRedirectUrl="/auth/role-check"
-                  signUpForceRedirectUrl="/auth/role-check"
-                  signUpFallbackRedirectUrl="/auth/role-check"
+                  signUpForceRedirectUrl="/"
+                  signUpFallbackRedirectUrl="/"
                 >
                   <button
                     type="button"
@@ -104,8 +104,8 @@ export default function Header() {
                 </SignInButton>
                 <SignUpButton
                   mode="modal"
-                  forceRedirectUrl="/auth/role-check"
-                  fallbackRedirectUrl="/auth/role-check"
+                  forceRedirectUrl="/"
+                  fallbackRedirectUrl="/"
                   signInForceRedirectUrl="/auth/role-check"
                   signInFallbackRedirectUrl="/auth/role-check"
                 >

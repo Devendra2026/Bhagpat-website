@@ -7,8 +7,8 @@ export default function SignUpPage() {
         routing="path"
         path="/sign-up"
         signInUrl="/sign-in"
-        forceRedirectUrl="/auth/role-check"
-        fallbackRedirectUrl="/auth/role-check"
+        forceRedirectUrl="/"
+        fallbackRedirectUrl="/"
         signInForceRedirectUrl="/auth/role-check"
         signInFallbackRedirectUrl="/auth/role-check"
       />

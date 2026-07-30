@@ -9,8 +9,8 @@ export default function SignInPage() {
         signUpUrl="/sign-up"
         forceRedirectUrl="/auth/role-check"
         fallbackRedirectUrl="/auth/role-check"
-        signUpForceRedirectUrl="/auth/role-check"
-        signUpFallbackRedirectUrl="/auth/role-check"
+        signUpForceRedirectUrl="/"
+        signUpFallbackRedirectUrl="/"
       />
     </main>
   );
