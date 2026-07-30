@@ -9,7 +9,15 @@ import {
   type Grievance,
 } from "@/types/public-grievance";
 
-const GRIEVANCE_ENDPOINT = "/publicgrievance/";
+const GRIEVANCE_ENDPOINT = "/api/grievance";
+
+type ApiServiceOptions = {
+  suppressErrorLog?: boolean;
+};
+
+function getGrievanceEndpoint(id: number) {
+  return `${GRIEVANCE_ENDPOINT.replace(/\/+$/, "")}/${id}`;
+}
 
 // POST: Public grievance submit karna
 export async function createGrievance(
@@ -22,15 +30,22 @@ export async function createGrievance(
       body: JSON.stringify(data),
     }
   );
-  console.log("BACKEND RESPONSE:", response);
 
   return grievanceSchema.parse(response);
 }
 
 // GET ALL: Saare grievances fetch karna
-export async function getAllGrievances(): Promise<Grievance[]> {
+export async function getAllGrievances(
+  token?: string,
+  options: ApiServiceOptions = {}
+): Promise<Grievance[]> {
   const response = await apiRequest<unknown>(
-    GRIEVANCE_ENDPOINT
+    GRIEVANCE_ENDPOINT,
+    {
+      token,
+      suppressErrorLog:
+        options.suppressErrorLog,
+    }
   );
 
   return z.array(grievanceSchema).parse(response);
@@ -38,10 +53,17 @@ export async function getAllGrievances(): Promise<Grievance[]> {
 
 // GET BY ID: Single grievance fetch karna
 export async function getGrievanceById(
-  id: number
+  id: number,
+  token?: string,
+  options: ApiServiceOptions = {}
 ): Promise<Grievance> {
   const response = await apiRequest<unknown>(
-    `${GRIEVANCE_ENDPOINT}${id}`
+    getGrievanceEndpoint(id),
+    {
+      token,
+      suppressErrorLog:
+        options.suppressErrorLog,
+    }
   );
 
   return grievanceSchema.parse(response);
@@ -50,13 +72,15 @@ export async function getGrievanceById(
 // PUT / PATCH: Grievance update karna
 export async function updateGrievance(
   id: number,
-  data: Partial<CreateGrievanceData>
+  data: Partial<CreateGrievanceData>,
+  token?: string
 ): Promise<Grievance> {
   const response = await apiRequest<unknown>(
-    `${GRIEVANCE_ENDPOINT}${id}`,
+    getGrievanceEndpoint(id),
     {
       method: "PUT",
       body: JSON.stringify(data),
+      token,
     }
   );
 
@@ -65,12 +89,14 @@ export async function updateGrievance(
 
 // DELETE: Grievance delete karna
 export async function deleteGrievance(
-  id: number
+  id: number,
+  token?: string
 ): Promise<void> {
   await apiRequest<void>(
-    `${GRIEVANCE_ENDPOINT}${id}`,
+    getGrievanceEndpoint(id),
     {
       method: "DELETE",
+      token,
     }
   );
 }

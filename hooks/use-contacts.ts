@@ -1,16 +1,19 @@
-"use client"
+"use client";
+
+import { useAuth } from "@clerk/nextjs";
 import {
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { CreateContactData } from "@/types/contact"; 
+
+import { CreateContactData } from "@/types/contact";
 import {
   createContact,
+  deleteContact,
   getAllContacts,
   getContactById,
   updateContact,
-  deleteContact,
 } from "@/services/contact-api";
 
 export const contactQueryKeys = {
@@ -20,20 +23,79 @@ export const contactQueryKeys = {
     ["contacts", "detail", id] as const,
 };
 
-// Saare contacts fetch karne ka hook
-export function useContacts() {
+type AdminQueryOptions = {
+  enabled?: boolean;
+  suppressErrorLog?: boolean;
+};
+
+async function requireAdminToken(
+  getToken: () => Promise<string | null>
+) {
+  const token = await getToken();
+
+  if (!token) {
+    throw new Error(
+      "Authentication token nahi mila. Admin account se sign in karo."
+    );
+  }
+
+  return token;
+}
+
+export function useContacts(
+  options: AdminQueryOptions = {}
+) {
+  const {
+    getToken,
+    isLoaded,
+    isSignedIn,
+  } = useAuth();
+
   return useQuery({
     queryKey: contactQueryKeys.all,
-    queryFn: getAllContacts,
+    queryFn: async () => {
+      const token =
+        await requireAdminToken(getToken);
+
+      return getAllContacts(token, {
+        suppressErrorLog:
+          options.suppressErrorLog,
+      });
+    },
+    enabled:
+      isLoaded &&
+      isSignedIn === true &&
+      (options.enabled ?? true),
   });
 }
 
 // Ek contact ko ID se fetch karne ka hook
-export function useContact(id: number) {
+export function useContact(
+  id: number,
+  options: AdminQueryOptions = {}
+) {
+  const {
+    getToken,
+    isLoaded,
+    isSignedIn,
+  } = useAuth();
+
   return useQuery({
     queryKey: contactQueryKeys.detail(id),
-    queryFn: () => getContactById(id),
-    enabled: id > 0,
+    queryFn: async () => {
+      const token =
+        await requireAdminToken(getToken);
+
+      return getContactById(id, token, {
+        suppressErrorLog:
+          options.suppressErrorLog,
+      });
+    },
+    enabled:
+      isLoaded &&
+      isSignedIn === true &&
+      id > 0 &&
+      (options.enabled ?? true),
   });
 }
 
@@ -55,15 +117,21 @@ export function useCreateContact() {
 // Contact update karne ka hook
 export function useUpdateContact() {
   const queryClient = useQueryClient();
+  const { getToken } = useAuth();
 
   return useMutation({
-    mutationFn: ({
+    mutationFn: async ({
       id,
       data,
     }: {
       id: number;
       data: Partial<CreateContactData>;
-    }) => updateContact(id, data),
+    }) => {
+      const token =
+        await requireAdminToken(getToken);
+
+      return updateContact(id, data, token);
+    },
 
     onSuccess: async (updatedContact) => {
       queryClient.setQueryData(
@@ -81,9 +149,15 @@ export function useUpdateContact() {
 // Contact delete karne ka hook
 export function useDeleteContact() {
   const queryClient = useQueryClient();
+  const { getToken } = useAuth();
 
   return useMutation({
-    mutationFn: deleteContact,
+    mutationFn: async (id: number) => {
+      const token =
+        await requireAdminToken(getToken);
+
+      return deleteContact(id, token);
+    },
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -92,4 +166,3 @@ export function useDeleteContact() {
     },
   });
 }
-

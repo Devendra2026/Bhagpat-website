@@ -4,11 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ExternalLink,
+  KeyRound,
   LayoutDashboard,
   MessageSquareText,
   ShieldCheck,
   TriangleAlert,
+  UsersRound,
 } from "lucide-react";
+
+import { useAdminModuleAccess } from "@/hooks/use-admin-module-access";
+import {
+  AdminPermission,
+  type AdminPermissionKey,
+} from "@/types/admin-access";
 
 const sidebarLinks = [
   {
@@ -20,16 +28,66 @@ const sidebarLinks = [
     title: "Contact Submissions",
     href: "/admin/contacts",
     icon: MessageSquareText,
+    permissions: [AdminPermission.ContactsRead],
   },
   {
     title: "Public Grievances",
     href: "/admin/grievances",
     icon: TriangleAlert,
+    permissions: [AdminPermission.GrievancesRead],
   },
-];
+  {
+    title: "Signup Users",
+    href: "/admin/users",
+    icon: UsersRound,
+    permissions: [AdminPermission.UsersRead],
+  },
+  {
+    title: "Roles & Permissions",
+    href: "/admin/roles-permissions",
+    icon: KeyRound,
+    permissions: [
+      AdminPermission.RolesRead,
+      AdminPermission.PermissionsRead,
+    ],
+  },
+] satisfies Array<{
+  title: string;
+  href: string;
+  icon: typeof LayoutDashboard;
+  permissions?: AdminPermissionKey[];
+}>;
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const moduleAccess = useAdminModuleAccess();
+  const visibleLinks = sidebarLinks.filter(
+    (link) => {
+      if (!link.permissions) {
+        return true;
+      }
+
+      if (link.href === "/admin/contacts") {
+        return moduleAccess.canReadContacts;
+      }
+
+      if (link.href === "/admin/grievances") {
+        return moduleAccess.canReadGrievances;
+      }
+
+      if (link.href === "/admin/users") {
+        return moduleAccess.canReadUsers;
+      }
+
+      if (
+        link.href === "/admin/roles-permissions"
+      ) {
+        return moduleAccess.canManageRbac;
+      }
+
+      return false;
+    }
+  );
 
   return (
     <aside className="hidden min-h-screen w-64 flex-col border-r border-slate-200 bg-white lg:flex">
@@ -52,7 +110,7 @@ export default function AdminSidebar() {
 
       {/* Links */}
       <nav className="flex-1 space-y-2 p-4">
-        {sidebarLinks.map((link) => {
+        {visibleLinks.map((link) => {
           const Icon = link.icon;
 
           const isActive =

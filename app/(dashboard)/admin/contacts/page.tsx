@@ -3,18 +3,22 @@
 
 import { MessageSquareText } from "lucide-react";
 
+import PermissionDeniedState from "@/components/admin/PermissionDeniedState";
 import ContactTable from "@/components/admin/contacts/Contact-Table";
-import { useContacts } from "@/hooks/use-contacts";
+import { useAdminModuleAccess } from "@/hooks/use-admin-module-access";
 
 export default function AdminContactsPage() {
-  const {
-    data: contacts = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
-    isFetching,
-  } = useContacts();
+  const moduleAccess = useAdminModuleAccess();
+  const contactsQuery =
+    moduleAccess.queries.contacts;
+  const canReadContacts =
+    moduleAccess.canReadContacts;
+  const contacts = contactsQuery.data ?? [];
+  const isCheckingAccess =
+    moduleAccess.accessQuery.isLoading ||
+    (moduleAccess.accessQuery
+      .isPermissionUnknown &&
+      contactsQuery.isLoading);
 
   return (
     <main className="p-4 sm:p-6 lg:p-8">
@@ -42,7 +46,10 @@ export default function AdminContactsPage() {
             </div>
           </div>
 
-          {!isLoading && !isError && (
+          {!isCheckingAccess &&
+            canReadContacts &&
+            !contactsQuery.isLoading &&
+            !contactsQuery.isError && (
             <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-2">
               <p className="text-xs font-semibold text-blue-600">
                 Total Submissions
@@ -55,47 +62,73 @@ export default function AdminContactsPage() {
           )}
         </div>
 
-        {/* Loading State */}
-        {isLoading && (
+        {isCheckingAccess && (
           <div className="flex min-h-[350px] items-center justify-center rounded-2xl border border-slate-200 bg-white">
-            <div className="text-center">
-              <div className="mx-auto h-9 w-9 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
-
-              <p className="mt-4 text-sm font-medium text-slate-500">
-                Contact submissions loading...
-              </p>
-            </div>
+            <p className="text-sm font-medium text-slate-500">
+              Permissions checking...
+            </p>
           </div>
         )}
+
+        {!isCheckingAccess &&
+          !canReadContacts && (
+            <PermissionDeniedState description="Contact submissions dekhne ke liye contact:read permission assign honi chahiye." />
+          )}
+
+        {/* Loading State */}
+        {!isCheckingAccess &&
+          canReadContacts &&
+          contactsQuery.isLoading && (
+            <div className="flex min-h-[350px] items-center justify-center rounded-2xl border border-slate-200 bg-white">
+              <div className="text-center">
+                <div className="mx-auto h-9 w-9 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
+
+                <p className="mt-4 text-sm font-medium text-slate-500">
+                  Contact submissions loading...
+                </p>
+              </div>
+            </div>
+          )}
 
         {/* Error State */}
-        {isError && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-6">
-            <h2 className="font-semibold text-red-700">
-              Does not load contacts.
-            </h2>
+        {!isCheckingAccess &&
+          canReadContacts &&
+          contactsQuery.isError && (
+            <div className="rounded-2xl border border-red-200 bg-red-50 p-6">
+              <h2 className="font-semibold text-red-700">
+                Does not load contacts.
+              </h2>
 
-            <p className="mt-1 text-sm text-red-600">
-              {error instanceof Error
-                ? error.message
-                : "Something went wrong"}
-            </p>
+              <p className="mt-1 text-sm text-red-600">
+                {contactsQuery.error instanceof Error
+                  ? contactsQuery.error.message
+                  : "Something went wrong"}
+              </p>
 
-            <button
-              type="button"
-              onClick={() => refetch()}
-              disabled={isFetching}
-              className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isFetching ? "Retrying..." : "Try Again"}
-            </button>
-          </div>
-        )}
+              <button
+                type="button"
+                onClick={() =>
+                  contactsQuery.refetch()
+                }
+                disabled={
+                  contactsQuery.isFetching
+                }
+                className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {contactsQuery.isFetching
+                  ? "Retrying..."
+                  : "Try Again"}
+              </button>
+            </div>
+          )}
 
         {/* Contact Table */}
-        {!isLoading && !isError && (
-          <ContactTable data={contacts} />
-        )}
+        {!isCheckingAccess &&
+          canReadContacts &&
+          !contactsQuery.isLoading &&
+          !contactsQuery.isError && (
+            <ContactTable data={contacts} />
+          )}
       </div>
     </main>
   );

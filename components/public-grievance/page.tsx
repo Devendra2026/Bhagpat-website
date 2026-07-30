@@ -224,6 +224,9 @@ export default function PublicGrievance() {
       });
 
       setSubmitted(true);
+      setComplaintId(
+        String(createdGrievance.id)
+      );
 
       setFormData(initialFormData);
     } catch (error) {

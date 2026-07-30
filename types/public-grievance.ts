@@ -84,16 +84,30 @@ export const createGrievanceSchema = z.object({
 });
 
 /*
- * Backend se grievance create hone ke baad
- * id ke saath complete response aayega.
+ * Backend se grievance read karte time old/stored data aa sakta hai.
+ * Admin table ko display ke liye bad historical rows par block nahi karna.
  */
-export const grievanceSchema =
-  createGrievanceSchema.extend({
-    id: z
-      .number()
-      .int()
-      .positive(),
-  });
+const apiTextField = z.preprocess(
+  (value) => {
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    return String(value).trim();
+  },
+  z.string()
+);
+
+export const grievanceSchema = z.object({
+  id: z.coerce.number().int().positive(),
+  full_name: apiTextField,
+  mobile_number: apiTextField,
+  email: apiTextField,
+  complaint_category: apiTextField,
+  municipal_ward: apiTextField,
+  incident_address: apiTextField,
+  description: apiTextField,
+});
 
 /*
  * POST request ka type.

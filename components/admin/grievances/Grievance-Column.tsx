@@ -5,15 +5,20 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
 import type { Grievance } from "@/types/public-grievance";
+import GrievanceActions from "./Grievance-Actions";
 
 export const grievanceColumns: ColumnDef<Grievance>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
+    id: "serialNumber",
+    header: "Sr. No.",
 
-    cell: ({ row }) => (
+    cell: ({ row, table }) => (
       <span className="font-semibold text-slate-700">
-        {row.original.id}
+        {table
+          .getFilteredRowModel()
+          .rows.findIndex(
+            (tableRow) => tableRow.id === row.id
+          ) + 1}
       </span>
     ),
   },
@@ -93,6 +98,16 @@ export const grievanceColumns: ColumnDef<Grievance>[] = [
       >
         {row.original.description}
       </p>
+    ),
+  },
+  {
+    id: "actions",
+    header: "Actions",
+
+    cell: ({ row }) => (
+      <GrievanceActions
+        grievance={row.original}
+      />
     ),
   },
 ];

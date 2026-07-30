@@ -1,16 +1,16 @@
 
 'use client';
 
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
 import React, { useState } from 'react';
-import { Shield, User, FileText, CreditCard, Search, PhoneCall, X, AlertCircle, UserPlus } from 'lucide-react';
+import { LayoutDashboard, LogIn, Search, Shield, UserPlus, X } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '../ui/input';
-import { Label } from 'recharts';
-import { Select, SelectItem } from '../ui/select';
-import { Textarea } from '../ui/textarea';
+import { Label } from '../ui/label';
 
 export default function Header() {
+  const { isSignedIn } = useUser();
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -64,7 +64,7 @@ export default function Header() {
           </div>
           
           {/* Quick Actions Grid */}
-          <div className="grid grid-cols-2 sm:flex items-center gap-10 w-full sm:w-auto">
+          <div className="flex flex-wrap items-center justify-center gap-3 w-full sm:w-auto">
             <Button
               suppressHydrationWarning
               onClick={() => setActiveModal('search')}
@@ -74,14 +74,51 @@ export default function Header() {
               <Search className="w-4 h-4" />
             </Button>
 
-            {/* Sign Up Button */}
-            <Button
-            suppressHydrationWarning
-              className="flex items-center gap-1.5 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition shrink-0 shadow-sm cursor-pointer"
-            >
-              <UserPlus className="w-4 h-4" />
-              <span>Sign Up</span>
-            </Button>
+            {isSignedIn ? (
+              <div className="flex items-center justify-end gap-3">
+                <Link
+                  href="/auth/role-check"
+                  className="flex items-center gap-1.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-800"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  <span>Dashboard</span>
+                </Link>
+                <UserButton />
+              </div>
+            ) : (
+              <div className="flex items-center justify-end gap-2">
+                <SignInButton
+                  mode="modal"
+                  forceRedirectUrl="/auth/role-check"
+                  fallbackRedirectUrl="/auth/role-check"
+                  signUpForceRedirectUrl="/auth/role-check"
+                  signUpFallbackRedirectUrl="/auth/role-check"
+                >
+                  <button
+                    type="button"
+                    className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-100"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    <span>Sign In</span>
+                  </button>
+                </SignInButton>
+                <SignUpButton
+                  mode="modal"
+                  forceRedirectUrl="/auth/role-check"
+                  fallbackRedirectUrl="/auth/role-check"
+                  signInForceRedirectUrl="/auth/role-check"
+                  signInFallbackRedirectUrl="/auth/role-check"
+                >
+                  <button
+                    type="button"
+                    className="flex items-center gap-1.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-800"
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    <span>Sign Up</span>
+                  </button>
+                </SignUpButton>
+              </div>
+            )}
           </div>
         </div>
       </header>

@@ -4,6 +4,7 @@ const API_URL =
 
 type ApiRequestOptions = RequestInit & {
   token?: string | null;
+  suppressErrorLog?: boolean;
 };
 
 type FastApiValidationError = {
@@ -68,6 +69,7 @@ export async function apiRequest<T>(
    */
   const {
     token,
+    suppressErrorLog,
     ...requestOptions
   } = options;
 
@@ -146,11 +148,13 @@ export async function apiRequest<T>(
   }
 
   if (!response.ok) {
-    console.error("API request failed:", {
-      requestUrl,
-      status: response.status,
-      responseData,
-    });
+    if (!suppressErrorLog) {
+      console.error("API request failed:", {
+        requestUrl,
+        status: response.status,
+        responseData,
+      });
+    }
 
     throw new Error(
       getErrorMessage(responseData)

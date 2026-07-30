@@ -9,7 +9,15 @@ import {
 } from "@/types/contact";
 
 
-const CONTACT_ENDPOINT = "/contact/";
+const CONTACT_ENDPOINT = "/api/contact";
+
+type ApiServiceOptions = {
+  suppressErrorLog?: boolean;
+};
+
+function getContactEndpoint(id: number) {
+  return `${CONTACT_ENDPOINT.replace(/\/+$/, "")}/${id}`;
+}
 
 // POST: naya contact submit karna
 export async function createContact(
@@ -27,22 +35,34 @@ export async function createContact(
 }
 // GET ALL
 
-export async function getAllContacts():
-  Promise<Contact[]>{
+export async function getAllContacts(
+  token?: string,
+  options: ApiServiceOptions = {}
+): Promise<Contact[]>{
   const response = await apiRequest<unknown>(
-    CONTACT_ENDPOINT
+    CONTACT_ENDPOINT,
+    {
+      token,
+      suppressErrorLog:
+        options.suppressErrorLog,
+    }
   );
   return z.array(contactSchema).parse(response);
 }
   
 // get by id
 export async function getContactById(
-  id:number
+  id:number,
+  token?: string,
+  options: ApiServiceOptions = {}
 ): Promise<Contact>{
   const response = await apiRequest<unknown>(
-    `${CONTACT_ENDPOINT}/${id}`,
+    getContactEndpoint(id),
     {
       method: "GET",
+      token,
+      suppressErrorLog:
+        options.suppressErrorLog,
     }
   );
   return contactSchema.parse(response);
@@ -51,25 +71,29 @@ export async function getContactById(
 // put 
 export async function updateContact(
   id: number,
-  data:Partial<CreateContactData>
+  data:Partial<CreateContactData>,
+  token?: string
 ): Promise<Contact>{
   const response = await apiRequest<unknown>(
-    `${CONTACT_ENDPOINT}/${id}`,
+    getContactEndpoint(id),
     {
-      method: "DELETE",
+      method: "PUT",
       body: JSON.stringify(data),
+      token,
     }
   );
   return contactSchema.parse(response);
 }
 // delete
 export async function deleteContact(
-  id : number
+  id : number,
+  token?: string
 ): Promise<void>{
-  const response = await apiRequest<unknown>(
-    `${CONTACT_ENDPOINT}/${id}`,
+  await apiRequest<void>(
+    getContactEndpoint(id),
     {
       method: "DELETE",
+      token,
     }
   );
 }

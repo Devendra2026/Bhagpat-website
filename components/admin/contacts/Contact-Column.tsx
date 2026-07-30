@@ -3,14 +3,19 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Contact } from "@/types/contact";
+import ContactActions from "./Contact-Actions";
 
 export const contactColumns: ColumnDef<Contact>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => (
+    id: "serialNumber",
+    header: "Sr. No.",
+    cell: ({ row, table }) => (
       <span className="font-semibold text-slate-700">
-        {row.original.id}
+        {table
+          .getFilteredRowModel()
+          .rows.findIndex(
+            (tableRow) => tableRow.id === row.id
+          ) + 1}
       </span>
     ),
   },
@@ -60,6 +65,13 @@ export const contactColumns: ColumnDef<Contact>[] = [
       >
         {row.original.message}
       </p>
+    ),
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => (
+      <ContactActions contact={row.original} />
     ),
   },
 ];

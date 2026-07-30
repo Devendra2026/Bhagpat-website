@@ -1,38 +1,60 @@
 
 "use client";
 
-import { useGrievances } from "@/hooks/use-grievances";
+import PermissionDeniedState from "@/components/admin/PermissionDeniedState";
+import { useAdminModuleAccess } from "@/hooks/use-admin-module-access";
 import GrievanceTable from "@/components/admin/grievances/Grievance-Table";
 
 export default function AdminGrievancesPage() {
-  const {
-    data: grievances = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useGrievances();
+  const moduleAccess = useAdminModuleAccess();
+  const grievancesQuery =
+    moduleAccess.queries.grievances;
+  const canReadGrievances =
+    moduleAccess.canReadGrievances;
+  const grievances =
+    grievancesQuery.data ?? [];
+  const isCheckingAccess =
+    moduleAccess.accessQuery.isLoading ||
+    (moduleAccess.accessQuery
+      .isPermissionUnknown &&
+      grievancesQuery.isLoading);
 
-  if (isLoading) {
+  if (
+    isCheckingAccess ||
+    (canReadGrievances &&
+      grievancesQuery.isLoading)
+  ) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <p className="text-sm font-medium text-slate-500">
-          Grievances loading...
+          {isCheckingAccess
+            ? "Permissions checking..."
+            : "Grievances loading..."}
         </p>
       </div>
     );
   }
 
-  if (isError) {
+  if (!canReadGrievances) {
+    return (
+      <section className="p-4 sm:p-6 lg:p-8">
+        <PermissionDeniedState description="Public grievances dekhne ke liye grievance:read permission assign honi chahiye." />
+      </section>
+    );
+  }
+
+  if (grievancesQuery.isError) {
     return (
       <div className="rounded-xl border border-red-200 bg-red-50 p-6">
         <p className="text-sm font-semibold text-red-700">
-          {error.message}
+          {grievancesQuery.error.message}
         </p>
 
         <button
           type="button"
-          onClick={() => refetch()}
+          onClick={() =>
+            grievancesQuery.refetch()
+          }
           className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white"
         >
           Try Again
