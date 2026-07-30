@@ -7,8 +7,8 @@ type PermissionDeniedStateProps = {
 };
 
 export default function PermissionDeniedState({
-  title = "Permission nahi hai",
-  description = "Is section ko access karne ke liye role me required permission assign honi chahiye.",
+  title = " No Permission ",
+  description = "You need the required permission assigned to your role to access this section.",
 }: PermissionDeniedStateProps) {
   return (
     <div className="rounded-xl border border-amber-200 bg-amber-50 p-6 text-center">

@@ -62,7 +62,7 @@ function getContactDraft(contact: Contact): ContactDraft {
 function getErrorMessage(error: unknown) {
   return error instanceof Error
     ? error.message
-    : "Action complete nahi ho paya";
+    : "Action could not be completed. Please try again.";
 }
 
 export default function ContactActions({

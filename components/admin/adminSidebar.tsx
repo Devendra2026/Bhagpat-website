@@ -93,9 +93,11 @@ export default function AdminSidebar() {
     <aside className="hidden min-h-screen w-64 flex-col border-r border-slate-200 bg-white lg:flex">
       {/* Logo */}
       <div className="flex h-20 items-center gap-3 border-b border-slate-200 px-5">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
-          <ShieldCheck className="h-6 w-6" />
-        </div>
+      <img
+        src="https://cdn.s3waas.gov.in/s30336dcbab05b9d5ad24f4333c7658a0e/uploads/2018/02/2018021632.png"
+        alt="Town Panchayat Aminagar Sarai logo"
+         className="h-11 w-11 rounded-xl object-contain"
+          />
 
         <div>
           <h2 className="font-bold text-slate-900">

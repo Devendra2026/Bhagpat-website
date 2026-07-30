@@ -457,7 +457,7 @@ export default function RolesPermissionsManager() {
     return (
       <div className="rounded-xl border border-red-200 bg-red-50 p-6">
         <h2 className="font-semibold text-red-700">
-          Roles and permissions load nahi ho pa rahe.
+          Failed to load roles and permissions. Please try again later.
         </h2>
         <p className="mt-1 text-sm text-red-600">
           {getErrorMessage(error)}

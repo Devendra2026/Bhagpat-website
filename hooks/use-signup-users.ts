@@ -38,7 +38,7 @@ async function requireAdminToken(
 
   if (!token) {
     throw new Error(
-      "Authentication token nahi mila. Admin account se sign in karo."
+      "Authentication token not found. Please sign in with an admin account."
     );
   }
 
