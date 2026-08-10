@@ -98,6 +98,41 @@ export default function Gallery() {
       category: 'Events',
       imageUrl: '/temple.jpg',
     },
+    {
+      id: 17,
+      category: 'Events',
+      imageUrl: '/cappp.jpeg',
+    },
+    {
+      id: 18,
+      category: 'Events',
+      imageUrl: '/copyyy.jpeg',
+    },
+    {
+      id: 19,
+      category: 'Events',
+      imageUrl: '/giftt.jpeg',
+    },
+    {
+      id: 20,
+      category: 'Events',
+      imageUrl: '/kalashhh.jpeg',
+    },
+    {
+      id: 21,
+      category: 'Events',
+      imageUrl: '/ladies.jpeg',
+    },
+    {
+      id: 22,
+      category: 'Events',
+      imageUrl: '/scissors.jpeg',
+    },
+    {
+      id: 23,
+      category: 'Cleanliness',
+      imageUrl: '/soill.jpeg',
+    },
   ];
 
   const filteredItems = filter === 'All' ? galleryItems : galleryItems.filter((item) => item.category === filter);
