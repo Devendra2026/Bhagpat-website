@@ -6,13 +6,16 @@ import React, { useState } from 'react';
 import { LayoutDashboard, LogIn, Search, Shield, UserPlus, X } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useAdminAccess } from '@/hooks/use-admin-access';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 
 export default function Header() {
   const { isSignedIn } = useUser();
+  const { access } = useAdminAccess();
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const canSeeDashboard = Boolean(isSignedIn && access?.isAllowed);
 
   const closeModal = () => {
     setActiveModal(null);
@@ -76,13 +79,15 @@ export default function Header() {
 
             {isSignedIn ? (
               <div className="flex items-center justify-end gap-3">
-                <Link
-                  href="/auth/role-check"
-                  className="flex items-center gap-1.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-800"
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  <span>Dashboard</span>
-                </Link>
+                {canSeeDashboard && (
+                  <Link
+                    href="/auth/role-check"
+                    className="flex items-center gap-1.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-800"
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    <span>Dashboard</span>
+                  </Link>
+                )}
                 <UserButton />
               </div>
             ) : (
