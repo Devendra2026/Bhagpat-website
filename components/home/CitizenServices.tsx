@@ -8,8 +8,8 @@ import {
   Construction,
   CreditCard,
   Droplet,
+  Download,
   HelpCircle,
-  Send,
   Skull,
   Store,
   X,
@@ -23,12 +23,12 @@ interface ServiceItem {
   desc: string;
   icon: React.ReactNode;
   themeColor: string;
-  formType: 'tax' | 'certificate' | 'license' | 'rti' | 'complaint';
+  downloadUrl: string; // डाउनलोड फाइल का लिंक (PDF / Doc)
 }
 
 export default function CitizenServices() {
   const [activeService, setActiveService] = useState<ServiceItem | null>(null);
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isDownloaded, setIsDownloaded] = useState(false);
 
   const services: ServiceItem[] = [
     {
@@ -38,7 +38,7 @@ export default function CitizenServices() {
       desc: 'Pay yearly house or land tax and print municipal receipts online.',
       icon: <CreditCard className="w-6 h-6" />,
       themeColor: 'indigo',
-      formType: 'tax',
+      downloadUrl: '/forms/property-tax-form.pdf', // यहाँ अपनी फाइल का पाथ दें
     },
     {
       id: 'water-tax',
@@ -47,7 +47,7 @@ export default function CitizenServices() {
       desc: 'Check outstanding water supply billing rates and settle dues.',
       icon: <Droplet className="w-6 h-6" />,
       themeColor: 'sky',
-      formType: 'tax',
+      downloadUrl: '/forms/water-tax-form.pdf',
     },
     {
       id: 'birth-cert',
@@ -56,7 +56,7 @@ export default function CitizenServices() {
       desc: 'Apply for or verify official birth registration certificates.',
       icon: <Award className="w-6 h-6" />,
       themeColor: 'emerald',
-      formType: 'certificate',
+      downloadUrl: '/forms/birth-certificate-form.pdf',
     },
     {
       id: 'death-cert',
@@ -65,7 +65,7 @@ export default function CitizenServices() {
       desc: 'Register a demise record or apply for official death certificates.',
       icon: <Skull className="w-6 h-6" />,
       themeColor: 'rose',
-      formType: 'certificate',
+      downloadUrl: '/forms/death-certificate-form.pdf',
     },
     {
       id: 'trade-lic',
@@ -74,7 +74,7 @@ export default function CitizenServices() {
       desc: 'Obtain dynamic shop licenses or renew existing trade permits.',
       icon: <Store className="w-6 h-6" />,
       themeColor: 'amber',
-      formType: 'license',
+      downloadUrl: '/forms/trade-license-form.pdf',
     },
     {
       id: 'build-perm',
@@ -83,7 +83,7 @@ export default function CitizenServices() {
       desc: 'Submit architectural site plan blue-prints for urban clearances.',
       icon: <Construction className="w-6 h-6" />,
       themeColor: 'purple',
-      formType: 'license',
+      downloadUrl: '/forms/building-permission-form.pdf',
     },
     {
       id: 'rti',
@@ -92,7 +92,7 @@ export default function CitizenServices() {
       desc: 'File requests under Right to Information Act to municipal office.',
       icon: <HelpCircle className="w-6 h-6" />,
       themeColor: 'cyan',
-      formType: 'rti',
+      downloadUrl: '/forms/rti-application-form.pdf',
     },
     {
       id: 'grievance',
@@ -101,51 +101,55 @@ export default function CitizenServices() {
       desc: 'Register civic problems and track resolution progress directly.',
       icon: <AlertOctagon className="w-6 h-6" />,
       themeColor: 'red',
-      formType: 'complaint',
+      downloadUrl: '/forms/complaint-form.pdf',
     },
   ];
 
   const handleCardClick = (service: ServiceItem) => {
     setActiveService(service);
-    setFormSubmitted(false);
+    setIsDownloaded(false);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormSubmitted(true);
+  const handleDownload = (url: string) => {
+    setIsDownloaded(true);
+    // यहाँ आप डायरेक्ट फाइल डाउनलोड ट्रिगर कर सकते हैं
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = url.split('/').pop() || 'document.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
     setTimeout(() => {
       setActiveService(null);
-      setFormSubmitted(false);
+      setIsDownloaded(false);
     }, 2000);
   };
 
   return (
     <section id="citizen-services" className="py-20 px-4 md:px-8 bg-white relative">
       <div className="max-w-7xl mx-auto">
-       
+        
         {/* Section Title */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs bg-gov-blue-medium/10 text-gov-blue-medium px-3 py-1 rounded-full font-bold uppercase tracking-wider border border-gov-blue-medium/20">
+          <span className="text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full font-bold uppercase tracking-wider border border-blue-100">
             Citizen Services Portal
           </span>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gov-blue-dark tracking-tight mt-3 font-serif">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mt-3 font-serif">
             Unified Public Service Desk
           </h2>
           <p className="text-sm text-slate-500 mt-2 font-medium">
-            Interact with our official digital desks. Fill forms online and complete transactions without manual
-            queuing.
+            Download official application forms and templates directly for offline submission.
           </p>
-          <div className="w-20 h-1 bg-gov-saffron mx-auto mt-4 rounded-full"></div>
+          <div className="w-20 h-1 bg-amber-500 mx-auto mt-4 rounded-full"></div>
         </div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => {
-            // Determine dynamic border/bg style
             let themeClass = 'hover:border-indigo-300 text-indigo-600 bg-indigo-50/50';
             if (service.themeColor === 'sky') themeClass = 'hover:border-sky-300 text-sky-600 bg-sky-50/50';
-            if (service.themeColor === 'emerald')
-              themeClass = 'hover:border-emerald-300 text-emerald-600 bg-emerald-50/50';
+            if (service.themeColor === 'emerald') themeClass = 'hover:border-emerald-300 text-emerald-600 bg-emerald-50/50';
             if (service.themeColor === 'rose') themeClass = 'hover:border-rose-300 text-rose-600 bg-rose-50/50';
             if (service.themeColor === 'amber') themeClass = 'hover:border-amber-300 text-amber-600 bg-amber-50/50';
             if (service.themeColor === 'purple') themeClass = 'hover:border-purple-300 text-purple-600 bg-purple-50/50';
@@ -163,23 +167,18 @@ export default function CitizenServices() {
                 className={`group border border-slate-100 rounded-2xl p-6 transition-all duration-300 cursor-pointer hover:shadow-xl hover:-translate-y-1.5 flex flex-col justify-between h-52.5 ${themeClass}`}
               >
                 <div>
-                  {/* Icon Frame */}
                   <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center transition-transform group-hover:rotate-6 group-hover:scale-105 shrink-0">
                     {service.icon}
                   </div>
-
-                  {/* Titles */}
                   <div className="mt-4">
                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">
                       {service.nameHi}
                     </span>
-                    <h3 className="text-base font-extrabold text-gov-blue-dark mt-0.5 tracking-tight group-hover:text-gov-blue-medium transition-colors">
+                    <h3 className="text-base font-extrabold text-slate-900 mt-0.5 tracking-tight group-hover:text-blue-600 transition-colors">
                       {service.name}
                     </h3>
                   </div>
                 </div>
-
-                {/* Description */}
                 <p className="text-xs text-slate-500 font-medium line-clamp-2 mt-2 leading-relaxed">{service.desc}</p>
               </m.div>
             );
@@ -188,24 +187,23 @@ export default function CitizenServices() {
       </div>
 
       {/* ================================================= */}
-      {/* SERVICE SIMULATION MODAL SHEET                    */}
+      {/* DOWNLOAD TEMPLATE MODAL SHEET                   */}
       {/* ================================================= */}
-
       <AnimatePresence>
         {activeService && (
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-999">
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
             <m.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-lg w-full overflow-hidden"
+              className="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full overflow-hidden"
             >
               {/* Modal Header */}
-              <div className="gov-gradient-blue text-white px-6 py-4 flex justify-between items-center">
+              <div className="bg-slate-900 text-white px-6 py-4 flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <div className="p-1.5 bg-white/10 rounded-lg text-gov-saffron">{activeService.icon}</div>
+                  <div className="p-1.5 bg-white/10 rounded-lg text-amber-400">{activeService.icon}</div>
                   <div>
-                    <h3 className="font-extrabold text-sm uppercase tracking-wider">{activeService.name} Form</h3>
+                    <h3 className="font-extrabold text-sm uppercase tracking-wider">{activeService.name}</h3>
                     <p className="text-[10px] text-slate-300 font-semibold">{activeService.nameHi}</p>
                   </div>
                 </div>
@@ -217,211 +215,26 @@ export default function CitizenServices() {
                 </button>
               </div>
 
-              {/* Form Content */}
-              <div className="p-6">
-                {formSubmitted ? (
-                  <div className="py-8 text-center space-y-3 flex flex-col items-center">
-                    <CheckCircle className="w-16 h-16 text-emerald-500 animate-scale-up" />
-                    <h4 className="text-lg font-extrabold text-slate-800">Application Submitted!</h4>
-                    <p className="text-xs text-slate-500 font-semibold max-w-xs">
-                      Your reference ID is{' '}
-                      <span className="font-mono text-gov-blue-dark font-extrabold">
-                        BPT-SERV-{(Math.random() * 1000000).toFixed(0)}
-                      </span>
-                      . You will receive SMS alerts for further updates.
+              {/* Modal Content / Download Action */}
+              <div className="p-6 text-center">
+                {isDownloaded ? (
+                  <div className="py-6 space-y-3 flex flex-col items-center">
+                    <CheckCircle className="w-14 h-14 text-emerald-500 animate-scale-up" />
+                    <h4 className="text-base font-extrabold text-slate-800">Download Started!</h4>
+                    <p className="text-xs text-slate-500 font-semibold">
+                      Your official template for <span className="text-slate-800 font-bold">{activeService.name}</span> is downloading.
                     </p>
                   </div>
                 ) : (
-                  <form onSubmit={handleFormSubmit} className="space-y-4">
-                   
-                      {/* Common Client Details */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                          Applicant Name
-                        </label>
-                        <input
-                          required
-                          type="text"
-                          placeholder="John Doe"
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                          Mobile Number
-                        </label>
-                        <input
-                          required
-                          type="tel"
-                          placeholder="98765xxxxx"
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                        />
-                      </div>
+                  <div className="py-4 space-y-4">
+                    <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <Download className="w-8 h-8" />
                     </div>
-
-                    {/* Tax Specific Fields */}
-                    {activeService.formType === 'tax' && (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Property Identification Number (PIN)
-                          </label>
-                          <input
-                            required
-                            type="text"
-                            placeholder="BPT-PIN-XXXX"
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium uppercase font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Financial Year
-                          </label>
-                          <select className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold bg-white">
-                            <option>FY 2026-2027 (Current)</option>
-                            <option>FY 2025-2026</option>
-                          </select>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Certificate Specific Fields */}
-                    {activeService.formType === 'certificate' && (
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                              Date of Event
-                            </label>
-                            <input
-                              required
-                              type="date"
-                              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                              Place of Event
-                            </label>
-                            <input
-                              required
-                              type="text"
-                              placeholder="Baghpat District Hospital"
-                              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                            />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                              Father's Full Name
-                            </label>
-                            <input
-                              required
-                              type="text"
-                              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                              Mother's Full Name
-                            </label>
-                            <input
-                              required
-                              type="text"
-                              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* License Specific Fields */}
-                    {activeService.formType === 'license' && (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Firm/Business Name
-                          </label>
-                          <input
-                            required
-                            type="text"
-                            placeholder="e.g. Baghpat General Store"
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Ward Number / Business Location
-                          </label>
-                          <select className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold bg-white">
-                            {Array.from({ length: 25 }, (_, i) => (
-                              <option key={i + 1}>Ward No. {i + 1}</option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* RTI Specific Fields */}
-                    {activeService.formType === 'rti' && (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Department under Query
-                          </label>
-                          <select className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold bg-white">
-                            <option>Public Works (PWD)</option>
-                            <option>Sanitation & Cleanliness</option>
-                            <option>Finance & Tax Allocations</option>
-                            <option>Urban Engineering</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Describe Information Required
-                          </label>
-                          <textarea
-                            required
-                            rows={3}
-                            placeholder="State specific records or files you want to retrieve."
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Complaint Specific Fields */}
-                    {activeService.formType === 'complaint' && (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Ward Area / Location of Issue
-                          </label>
-                          <input
-                            required
-                            type="text"
-                            placeholder="e.g. Near Railway Station, Baghpat"
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Complaint Description
-                          </label>
-                          <textarea
-                            required
-                            rows={3}
-                            placeholder="Please provide specific details about the issue."
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Submit Section */}
-                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                    <h4 className="text-base font-bold text-slate-900">Download Official Application Form</h4>
+                    <p className="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">
+                      Click the button below to download the printable PDF format/template for this service.
+                    </p>
+                    <div className="pt-4 flex items-center justify-center gap-3">
                       <button
                         type="button"
                         onClick={() => setActiveService(null)}
@@ -430,14 +243,15 @@ export default function CitizenServices() {
                         Cancel
                       </button>
                       <button
-                        type="submit"
-                        className="flex items-center gap-1.5 px-5 py-2 bg-gov-saffron hover:bg-gov-saffron-dark text-white rounded-lg text-xs font-bold shadow-md cursor-pointer transition-colors"
+                        type="button"
+                        onClick={() => handleDownload(activeService.downloadUrl)}
+                        className="flex items-center gap-2 px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold shadow-md cursor-pointer transition-colors"
                       >
-                        <span>Submit Details</span>
-                        <Send className="w-3.5 h-3.5" />
+                        <Download className="w-4 h-4" />
+                        <span>Download PDF</span>
                       </button>
                     </div>
-                  </form>
+                  </div>
                 )}
               </div>
             </m.div>

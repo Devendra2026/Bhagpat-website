@@ -40,11 +40,11 @@ export default function Navbar() {
     if (pathname === '/public-grievance') setActiveTab('Public Grievance');
     else if (pathname === '/schemes') setActiveTab('Schemes');
     else if (pathname === '/gallery') setActiveTab('Gallery');
-    else if (pathname === '/contact-us') setActiveTab('Contact Us');
-    else if (pathname === '/about-us') setActiveTab('About-Us');
+    else if (pathname === '/contact') setActiveTab('Contact');
+    else if (pathname === '/about') setActiveTab('About');
     else if (pathname === '/departments') setActiveTab('Departments');
     else if (pathname === '/services') setActiveTab('Services');
-    else if (pathname === '/newsandnotice') setActiveTab('NewsAndNotice');
+    else if (pathname === '/newsandnotice') setActiveTab('News And Notice');
     else if (pathname === '/propertytax') setActiveTab('Property Tax');
     else if (pathname === '/staff') setActiveTab('Staff');
     else setActiveTab('Home');
@@ -52,15 +52,15 @@ export default function Navbar() {
 
   const menuItems: MenuItem[] = [
     { name: "Home", href: "/", hasDropdown: false },
-    { name: "About Us", href: "/about", hasDropdown: false ,},
+    { name: "About", href: "/about", hasDropdown: false ,},
     {name: "Departments",href: "/departments",hasDropdown: false,megaMenuType: "departments",},
-    { name: "Our Services", href: "/services",hasDropdown: true,megaMenuType: "services",},
+    { name: "Services", href: "/services",hasDropdown: true,megaMenuType: "services",},
     { name: "Public Grievance", href: "/public-grievance", hasDropdown: false },
     {name: "Schemes",href: "/schemes",hasDropdown: false,},
     { name: "News And Notice", href: "/newsandnotice", hasDropdown: false },
     { name: "Gallery", href: "/gallery", hasDropdown: false },
     { name: "Staff", href:"/staff", hasDropdown: false },
-    { name: "Contact Us", href: "/contact", hasDropdown: false },
+    { name: "Contact", href: "/contact", hasDropdown: false },
     { name: "Property Tax", href: "/propertytax", hasDropdown: false },
     
   ];

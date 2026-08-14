@@ -7,9 +7,10 @@ import {
   CheckCircle,
   Construction,
   CreditCard,
+  Download,
   Droplet,
+  FileText,
   HelpCircle,
-  Send,
   Skull,
   Store,
   X,
@@ -23,12 +24,15 @@ interface ServiceItem {
   desc: string;
   icon: React.ReactNode;
   themeColor: string;
+  themeClass: string;
   formType: 'tax' | 'certificate' | 'license' | 'rti' | 'complaint';
+  pdfName: string;
 }
 
 export default function Services() {
   const [activeService, setActiveService] = useState<ServiceItem | null>(null);
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
 
   const services: ServiceItem[] = [
     {
@@ -38,7 +42,9 @@ export default function Services() {
       desc: 'Pay yearly house or land tax and print municipal receipts online.',
       icon: <CreditCard className="w-6 h-6" />,
       themeColor: 'indigo',
+      themeClass: 'hover:border-indigo-300 text-indigo-600 bg-indigo-50/50',
       formType: 'tax',
+      pdfName: 'Property_Tax_Assessment_Form.pdf',
     },
     {
       id: 'water-tax',
@@ -47,7 +53,9 @@ export default function Services() {
       desc: 'Check outstanding water supply billing rates and settle dues.',
       icon: <Droplet className="w-6 h-6" />,
       themeColor: 'sky',
+      themeClass: 'hover:border-sky-300 text-sky-600 bg-sky-50/50',
       formType: 'tax',
+      pdfName: 'Water_Connection_Tax_Form.pdf',
     },
     {
       id: 'birth-cert',
@@ -56,7 +64,9 @@ export default function Services() {
       desc: 'Apply for or verify official birth registration certificates.',
       icon: <Award className="w-6 h-6" />,
       themeColor: 'emerald',
+      themeClass: 'hover:border-emerald-300 text-emerald-600 bg-emerald-50/50',
       formType: 'certificate',
+      pdfName: 'Birth_Registration_Form.pdf',
     },
     {
       id: 'death-cert',
@@ -65,7 +75,9 @@ export default function Services() {
       desc: 'Register a demise record or apply for official death certificates.',
       icon: <Skull className="w-6 h-6" />,
       themeColor: 'rose',
+      themeClass: 'hover:border-rose-300 text-rose-600 bg-rose-50/50',
       formType: 'certificate',
+      pdfName: 'Death_Registration_Form.pdf',
     },
     {
       id: 'trade-lic',
@@ -74,7 +86,9 @@ export default function Services() {
       desc: 'Obtain dynamic shop licenses or renew existing trade permits.',
       icon: <Store className="w-6 h-6" />,
       themeColor: 'amber',
+      themeClass: 'hover:border-amber-300 text-amber-600 bg-amber-50/50',
       formType: 'license',
+      pdfName: 'Trade_License_Application.pdf',
     },
     {
       id: 'build-perm',
@@ -83,7 +97,9 @@ export default function Services() {
       desc: 'Submit architectural site plan blue-prints for urban clearances.',
       icon: <Construction className="w-6 h-6" />,
       themeColor: 'purple',
+      themeClass: 'hover:border-purple-300 text-purple-600 bg-purple-50/50',
       formType: 'license',
+      pdfName: 'Building_Permission_Blueprint_Form.pdf',
     },
     {
       id: 'rti',
@@ -92,7 +108,9 @@ export default function Services() {
       desc: 'File requests under Right to Information Act to municipal office.',
       icon: <HelpCircle className="w-6 h-6" />,
       themeColor: 'cyan',
+      themeClass: 'hover:border-cyan-300 text-cyan-600 bg-cyan-50/50',
       formType: 'rti',
+      pdfName: 'RTI_Application_Form.pdf',
     },
     {
       id: 'grievance',
@@ -101,22 +119,28 @@ export default function Services() {
       desc: 'Register civic problems and track resolution progress directly.',
       icon: <AlertOctagon className="w-6 h-6" />,
       themeColor: 'red',
+      themeClass: 'hover:border-red-300 text-red-600 bg-red-50/50',
       formType: 'complaint',
+      pdfName: 'Civic_Grievance_Form.pdf',
     },
   ];
 
   const handleCardClick = (service: ServiceItem) => {
     setActiveService(service);
-    setFormSubmitted(false);
+    setDownloading(false);
+    setDownloaded(false);
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormSubmitted(true);
+  const handleDownload = () => {
+    setDownloading(true);
     setTimeout(() => {
-      setActiveService(null);
-      setFormSubmitted(false);
-    }, 2000);
+      setDownloading(false);
+      setDownloaded(true);
+      setTimeout(() => {
+        setActiveService(null);
+        setDownloaded(false);
+      }, 1500);
+    }, 1500);
   };
 
   return (
@@ -131,63 +155,49 @@ export default function Services() {
             Unified Public Service Desk
           </h2>
           <p className="text-sm text-slate-500 mt-2 font-medium">
-            Interact with our official digital desks. Fill forms online and complete transactions without manual
-            queuing.
+            Download official application forms and documents instantly for offline submission or review.
           </p>
           <div className="w-20 h-1 bg-gov-saffron mx-auto mt-4 rounded-full"></div>
         </div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => {
-            // Determine dynamic border/bg style
-            let themeClass = 'hover:border-indigo-300 text-indigo-600 bg-indigo-50/50';
-            if (service.themeColor === 'sky') themeClass = 'hover:border-sky-300 text-sky-600 bg-sky-50/50';
-            if (service.themeColor === 'emerald')
-              themeClass = 'hover:border-emerald-300 text-emerald-600 bg-emerald-50/50';
-            if (service.themeColor === 'rose') themeClass = 'hover:border-rose-300 text-rose-600 bg-rose-50/50';
-            if (service.themeColor === 'amber') themeClass = 'hover:border-amber-300 text-amber-600 bg-amber-50/50';
-            if (service.themeColor === 'purple') themeClass = 'hover:border-purple-300 text-purple-600 bg-purple-50/50';
-            if (service.themeColor === 'cyan') themeClass = 'hover:border-cyan-300 text-cyan-600 bg-cyan-50/50';
-            if (service.themeColor === 'red') themeClass = 'hover:border-red-300 text-red-600 bg-red-50/50';
-
-            return (
-              <m.div
-                key={service.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05, duration: 0.4 }}
-                onClick={() => handleCardClick(service)}
-                className={`group border border-slate-100 rounded-2xl p-6 transition-all duration-300 cursor-pointer hover:shadow-xl hover:-translate-y-1.5 flex flex-col justify-between h-52.5 ${themeClass}`}
-              >
-                <div>
-                  {/* Icon Frame */}
-                  <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center transition-transform group-hover:rotate-6 group-hover:scale-105 shrink-0">
-                    {service.icon}
-                  </div>
-
-                  {/* Titles */}
-                  <div className="mt-4">
-                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">
-                      {service.nameHi}
-                    </span>
-                    <h3 className="text-base font-extrabold text-gov-blue-dark mt-0.5 tracking-tight group-hover:text-gov-blue-medium transition-colors">
-                      {service.name}
-                    </h3>
-                  </div>
+          {services.map((service, index) => (
+            <m.div
+              key={service.id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.05, duration: 0.4 }}
+              onClick={() => handleCardClick(service)}
+              className={`group border border-slate-100 rounded-2xl p-6 transition-all duration-300 cursor-pointer hover:shadow-xl hover:-translate-y-1.5 flex flex-col justify-between h-52.5 ${service.themeClass}`}
+            >
+              <div>
+                {/* Icon Frame */}
+                <div className="w-12 h-12 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center transition-transform group-hover:rotate-6 group-hover:scale-105 shrink-0">
+                  {service.icon}
                 </div>
 
-                {/* Description */}
-                <p className="text-xs text-slate-500 font-medium line-clamp-2 mt-2 leading-relaxed">{service.desc}</p>
-              </m.div>
-            );
-          })}
+                {/* Titles */}
+                <div className="mt-4">
+                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">
+                    {service.nameHi}
+                  </span>
+                  <h3 className="text-base font-extrabold text-gov-blue-dark mt-0.5 tracking-tight group-hover:text-gov-blue-medium transition-colors">
+                    {service.name}
+                  </h3>
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="text-xs text-slate-500 font-medium line-clamp-2 mt-2 leading-relaxed">{service.desc}</p>
+            </m.div>
+          ))}
         </div>
       </div>
 
       {/* ================================================= */}
-      {/* SERVICE SIMULATION MODAL SHEET                    */}
+      {/* DOWNLOAD SIMULATION MODAL SHEET                   */}
       {/* ================================================= */}
 
       <AnimatePresence>
@@ -197,14 +207,14 @@ export default function Services() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-lg w-full overflow-hidden"
+              className="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full overflow-hidden"
             >
               {/* Modal Header */}
               <div className="gov-gradient-blue text-white px-6 py-4 flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-white/10 rounded-lg text-gov-saffron">{activeService.icon}</div>
                   <div>
-                    <h3 className="font-extrabold text-sm uppercase tracking-wider">{activeService.name} Form</h3>
+                    <h3 className="font-extrabold text-sm uppercase tracking-wider">{activeService.name}</h3>
                     <p className="text-[10px] text-slate-300 font-semibold">{activeService.nameHi}</p>
                   </div>
                 </div>
@@ -216,210 +226,32 @@ export default function Services() {
                 </button>
               </div>
 
-              {/* Form Content */}
-              <div className="p-6">
-                {formSubmitted ? (
-                  <div className="py-8 text-center space-y-3 flex flex-col items-center">
-                    <CheckCircle className="w-16 h-16 text-emerald-500 animate-scale-up" />
-                    <h4 className="text-lg font-extrabold text-slate-800">Application Submitted!</h4>
-                    <p className="text-xs text-slate-500 font-semibold max-w-xs">
-                      Your reference ID is{' '}
-                      <span className="font-mono text-gov-blue-dark font-extrabold">
-                        BPT-SERV-{(Math.random() * 1000000).toFixed(0)}
-                      </span>
-                      . You will receive SMS alerts for further updates.
+              {/* Modal Body */}
+              <div className="p-6 text-center space-y-4">
+                {downloaded ? (
+                  <div className="py-6 space-y-3 flex flex-col items-center">
+                    <CheckCircle className="w-14 h-14 text-emerald-500" />
+                    <h4 className="text-base font-extrabold text-slate-800">Download Complete!</h4>
+                    <p className="text-xs text-slate-500 font-semibold">
+                      Your document <span className="font-mono text-gov-blue-dark">{activeService.pdfName}</span> has been downloaded successfully.
                     </p>
                   </div>
                 ) : (
-                  <form onSubmit={handleFormSubmit} className="space-y-4">
-                    {/* Common Client Details */}
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                          Applicant Name
-                        </label>
-                        <input
-                          required
-                          type="text"
-                          placeholder="John Doe"
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                          Mobile Number
-                        </label>
-                        <input
-                          required
-                          type="tel"
-                          placeholder="98765xxxxx"
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                        />
+                  <>
+                    <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl mx-auto flex items-center justify-center border border-indigo-100">
+                      <FileText className="w-8 h-8" />
+                    </div>
+                    <div>
+                      <h4 className="text-base font-extrabold text-slate-800">Official Document Ready</h4>
+                      <p className="text-xs text-slate-500 font-medium mt-1">
+                        Click below to download the official PDF application format for {activeService.name}.
+                      </p>
+                      <div className="mt-3 inline-block bg-slate-100 text-slate-600 px-3 py-1 rounded-md text-[11px] font-mono font-semibold">
+                        {activeService.pdfName} (PDF)
                       </div>
                     </div>
 
-                    {/* Tax Specific Fields */}
-                    {activeService.formType === 'tax' && (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Property Identification Number (PIN)
-                          </label>
-                          <input
-                            required
-                            type="text"
-                            placeholder="BPT-PIN-XXXX"
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium uppercase font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Financial Year
-                          </label>
-                          <select className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold bg-white">
-                            <option>FY 2026-2027 (Current)</option>
-                            <option>FY 2025-2026</option>
-                          </select>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Certificate Specific Fields */}
-                    {activeService.formType === 'certificate' && (
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                              Date of Event
-                            </label>
-                            <input
-                              required
-                              type="date"
-                              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                              Place of Event
-                            </label>
-                            <input
-                              required
-                              type="text"
-                              placeholder="Baghpat District Hospital"
-                              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                            />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                              Father's Full Name
-                            </label>
-                            <input
-                              required
-                              type="text"
-                              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                              Mother's Full Name
-                            </label>
-                            <input
-                              required
-                              type="text"
-                              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* License Specific Fields */}
-                    {activeService.formType === 'license' && (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Firm/Business Name
-                          </label>
-                          <input
-                            required
-                            type="text"
-                            placeholder="e.g. Baghpat General Store"
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Ward Number / Business Location
-                          </label>
-                          <select className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold bg-white">
-                            {Array.from({ length: 11 }, (_, i) => (
-                              <option key={i + 1}>Ward No. {i + 1}</option>
-                            ))}
-                          </select>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* RTI Specific Fields */}
-                    {activeService.formType === 'rti' && (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Department under Query
-                          </label>
-                          <select className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold bg-white">
-                            <option>Public Works (PWD)</option>
-                            <option>Sanitation & Cleanliness</option>
-                            <option>Finance & Tax Allocations</option>
-                            <option>Urban Engineering</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Describe Information Required
-                          </label>
-                          <textarea
-                            required
-                            rows={3}
-                            placeholder="State specific records or files you want to retrieve."
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Complaint Specific Fields */}
-                    {activeService.formType === 'complaint' && (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Ward Area / Location of Issue
-                          </label>
-                          <input
-                            required
-                            type="text"
-                            placeholder="e.g. Near Railway Station, Baghpat"
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] font-bold text-slate-500 uppercase mb-1">
-                            Complaint Description
-                          </label>
-                          <textarea
-                            required
-                            rows={3}
-                            placeholder="Please provide specific details about the issue."
-                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs focus:outline-gov-blue-medium font-semibold"
-                          />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Submit Section */}
-                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                    <div className="flex items-center justify-center gap-3 pt-4 border-t border-slate-100">
                       <button
                         type="button"
                         onClick={() => setActiveService(null)}
@@ -428,14 +260,25 @@ export default function Services() {
                         Cancel
                       </button>
                       <button
-                        type="submit"
-                        className="flex items-center gap-1.5 px-5 py-2 bg-gov-saffron hover:bg-gov-saffron-dark text-white rounded-lg text-xs font-bold shadow-md cursor-pointer transition-colors"
+                        type="button"
+                        onClick={handleDownload}
+                        disabled={downloading}
+                        className="flex items-center gap-2 px-5 py-2 bg-gov-saffron hover:bg-gov-saffron-dark text-white rounded-lg text-xs font-bold shadow-md cursor-pointer transition-colors disabled:opacity-50"
                       >
-                        <span>Submit Details</span>
-                        <Send className="w-3.5 h-3.5" />
+                        {downloading ? (
+                          <>
+                            <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                            <span>Downloading...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-3.5 h-3.5" />
+                            <span>Download PDF</span>
+                          </>
+                        )}
                       </button>
                     </div>
-                  </form>
+                  </>
                 )}
               </div>
             </m.div>

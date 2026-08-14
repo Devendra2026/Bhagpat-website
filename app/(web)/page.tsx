@@ -5,6 +5,7 @@ import DigitalGateway from "@/components/home/DigitalGateway";
 import HeroSlider from "@/components/home/HeroSlider";
 import NewsAndNotices from "@/components/home/NewsAndNotices";
 import Statistics from "@/components/home/Statistics";
+import Galleryslider from "@/components/home/galleryslider";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       </div>
       <Statistics />
       <NewsAndNotices />
+      <Galleryslider />
     </div>
   );
 }
