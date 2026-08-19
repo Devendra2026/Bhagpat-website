@@ -1,7 +1,7 @@
 import {
   FATHER_NAMES,
   LANDMARKS,
-  LOCALITIES,
+  WARD_NAMES,
   OWNER_NAMES,
   PROPERTY_TAX_WARDS,
   PROPERTY_TYPES,
@@ -22,7 +22,7 @@ export const MOCK_PROPERTIES: PropertyRecord[] =
         FATHER_NAMES[serialNumber % FATHER_NAMES.length];
 
       const locality =
-        LOCALITIES[serialNumber % LOCALITIES.length];
+        WARD_NAMES[wardIndex];
 
       const landmark =
         LANDMARKS[serialNumber % LANDMARKS.length];
@@ -73,7 +73,7 @@ export const MOCK_PROPERTIES: PropertyRecord[] =
 
         locality,
 
-        address: `${ward}, ${locality}, Etah, Uttar Pradesh`,
+        address: `Ward No. ${wardIndex + 1}, ${locality}, Aminagar,Sarai, Baghpat, Uttar Pradesh`,
 
         landmark,
 
