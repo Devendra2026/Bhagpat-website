@@ -61,7 +61,7 @@ export default function Navbar() {
     { name: "Gallery", href: "/gallery", hasDropdown: false },
     { name: "Staff", href:"/staff", hasDropdown: false },
     { name: "Contact", href: "/contact", hasDropdown: false },
-    { name: " Pay Property Tax", href: "/propertytax", hasDropdown: false },
+    { name: "Pay Property Tax", href: "/propertytax", hasDropdown: false },
     
   ];
 
