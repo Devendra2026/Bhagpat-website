@@ -42,7 +42,7 @@ export const FATHER_NAMES = [
 export const LANDMARKS = [
   "Near Railway Crossing",
   "Near Shiv Temple",
-  "Near Nagar Palika Office",
+  "Near Nagar Panachayat Office",
   "Near Main Market",
   "Near Government School",
   "Near Water Tank",

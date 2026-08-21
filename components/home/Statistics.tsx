@@ -60,7 +60,7 @@ export default function Statistics() {
     {
       label: 'Total Population',
       labelHi: 'कुल जनसंख्या',
-      targetValue: 50913,
+      targetValue: 3,
       suffix: '+',
       icon: <Users className="w-6 h-6 text-gov-saffron" />,
       color: 'border-gov-saffron/20 bg-gov-saffron/5',
@@ -84,7 +84,7 @@ export default function Statistics() {
     {
       label: 'Water Connections',
       labelHi: 'पेयजल कनेक्शन',
-      targetValue: 12500,
+      targetValue: 1000,
       suffix: '+',
       icon: <GlassWater className="w-6 h-6 text-sky-600" />,
       color: 'border-sky-500/20 bg-sky-500/5',
@@ -138,9 +138,9 @@ export default function Statistics() {
               </div>
 
               {/* Stats Numbers */}
-              <div>
+              {/* <div>
                 <CountUp value={stat.targetValue} suffix={stat.suffix} />
-              </div>
+              </div> */}
 
               {/* Labels */}
               <div className="mt-2">

@@ -140,7 +140,7 @@ export default function PropertyTaxDetails({
 
             <DetailItem
               label="District"
-              value="Etah, Uttar Pradesh"
+              value="Baghpat, Uttar Pradesh"
             />
           </div>
         </div>

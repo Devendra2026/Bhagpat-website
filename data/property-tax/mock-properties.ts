@@ -73,7 +73,7 @@ export const MOCK_PROPERTIES: PropertyRecord[] =
 
         locality,
 
-        address: `Ward No. ${wardIndex + 1}, ${locality}, Aminagar,Sarai, Baghpat, Uttar Pradesh`,
+        address: `Ward No. ${wardIndex + 1}, ${locality}, Aminagar Sarai, Baghpat, Uttar Pradesh`,
 
         landmark,
 

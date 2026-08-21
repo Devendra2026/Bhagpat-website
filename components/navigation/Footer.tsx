@@ -42,7 +42,6 @@ export default function Footer() {
               { name: "About Baghpat City", href: "/about" },
               { name: "Executive Committee Members", href: "/staff" },
               { name: "Departments", href: "/departments" },
-              { name: "Tenders & Proposals", href: "/newsandnotice" },
               { name: "Gallery", href: "/gallery" },
               { name: "Contact-Us", href: "/contact" },
             ].map((link) => (

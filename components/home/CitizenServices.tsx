@@ -85,24 +85,6 @@ export default function CitizenServices() {
       themeColor: 'purple',
       downloadUrl: '/forms/building-permission-form.pdf',
     },
-    {
-      id: 'rti',
-      name: 'RTI Application',
-      nameHi: 'सूचना का अधिकार (RTI)',
-      desc: 'File requests under Right to Information Act to municipal office.',
-      icon: <HelpCircle className="w-6 h-6" />,
-      themeColor: 'cyan',
-      downloadUrl: '/forms/rti-application-form.pdf',
-    },
-    {
-      id: 'grievance',
-      name: 'Complaint Registry',
-      nameHi: 'शिकायत पंजीकरण',
-      desc: 'Register civic problems and track resolution progress directly.',
-      icon: <AlertOctagon className="w-6 h-6" />,
-      themeColor: 'red',
-      downloadUrl: '/forms/complaint-form.pdf',
-    },
   ];
 
   const handleCardClick = (service: ServiceItem) => {
@@ -136,7 +118,7 @@ export default function CitizenServices() {
             Citizen Services Portal
           </span>
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight mt-3 font-serif">
-            Unified Public Service Desk
+            Unified Public Service Forms
           </h2>
           <p className="text-sm text-slate-500 mt-2 font-medium">
             Download official application forms and templates directly for offline submission.

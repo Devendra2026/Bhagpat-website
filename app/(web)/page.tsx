@@ -3,8 +3,8 @@ import ChairmanMessage from "@/components/home/ChairmanMessage";
 import CitizenServices from "@/components/home/CitizenServices";
 import DigitalGateway from "@/components/home/DigitalGateway";
 import HeroSlider from "@/components/home/HeroSlider";
-import NewsAndNotices from "@/components/home/NewsAndNotices";
 import Statistics from "@/components/home/Statistics";
+import Portals from "@/components/home/portals"
 import Galleryslider from "@/components/home/galleryslider";
 
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
         <ChairmanMessage />
       </div>
       <Statistics />
-      <NewsAndNotices />
+      <Portals/>
       <Galleryslider />
     </div>
   );

@@ -28,41 +28,41 @@ export default function Gallery() {
       category: 'Cleanliness',
       imageUrl: '/dustbinphoto.jpg',
     },
-    {
-      id: 3,
-      category: 'Development',
-      imageUrl: '/cakecutting.jpg',
-    },
-    {
-      id: 4,
-      category: 'Development',
-      imageUrl: '/giftceremony.jpg',
-    },
-    {
-      id: 5,
-      category: 'Cleanliness',
-      imageUrl: '/inaugration.jpg',
-    },
+    // {
+    //   id: 3,
+    //   category: 'Development',
+    //   imageUrl: '/cakecutting.jpg',
+    // },
+    // {
+    //   id: 4,
+    //   category: 'Development',
+    //   imageUrl: '/giftceremony.jpg',
+    // },
+    // {
+    //   id: 5,
+    //   category: 'Cleanliness',
+    //   imageUrl: '/inaugration.jpg',
+    // },
     {
       id: 6,
       category: 'Events',
       imageUrl: '/independenceday.jpg',
     },
-    {
-      id: 7,
-      category: 'Development',
-      imageUrl: '/intercollege.jpg',
-    },
+    // {
+    //   id: 7,
+    //   category: 'Development',
+    //   imageUrl: '/intercollege.jpg',
+    // },
     {
       id: 8,
       category: 'Events',
       imageUrl: '/krishnagod.jpg',
     },
-    {
-      id: 9,
-      category: 'Cleanliness',
-      imageUrl: '/officephoto.jpg',
-    },
+    // {
+    //   id: 9,
+    //   category: 'Cleanliness',
+    //   imageUrl: '/officephoto.jpg',
+    // },
     {
       id: 10,
       category: 'Events',

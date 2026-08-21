@@ -101,28 +101,6 @@ export default function Services() {
       formType: 'license',
       pdfName: 'Building_Permission_Blueprint_Form.pdf',
     },
-    {
-      id: 'rti',
-      name: 'RTI Application',
-      nameHi: 'सूचना का अधिकार (RTI)',
-      desc: 'File requests under Right to Information Act to municipal office.',
-      icon: <HelpCircle className="w-6 h-6" />,
-      themeColor: 'cyan',
-      themeClass: 'hover:border-cyan-300 text-cyan-600 bg-cyan-50/50',
-      formType: 'rti',
-      pdfName: 'RTI_Application_Form.pdf',
-    },
-    {
-      id: 'grievance',
-      name: 'Complaint Registry',
-      nameHi: 'शिकायत पंजीकरण',
-      desc: 'Register civic problems and track resolution progress directly.',
-      icon: <AlertOctagon className="w-6 h-6" />,
-      themeColor: 'red',
-      themeClass: 'hover:border-red-300 text-red-600 bg-red-50/50',
-      formType: 'complaint',
-      pdfName: 'Civic_Grievance_Form.pdf',
-    },
   ];
 
   const handleCardClick = (service: ServiceItem) => {
